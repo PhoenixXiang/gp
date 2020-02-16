@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import Test from '../views/Test.vue'
+import SelectShare from '../views/SelectShare.vue'
 import ThreeFork from '../views/ThreeFork.vue'
 import KDJ from '../views/KDJ.vue'
 import MACD from '../views/MACD.vue'
@@ -17,6 +18,10 @@ const routes = [
     path: '/test',
     name: 'test',
     component: Test
+  }, {
+    path: '/selectShare',
+    name: 'selectShare',
+    component: SelectShare
   }, {
     path: '/threeFork',
     name: 'threeFork',

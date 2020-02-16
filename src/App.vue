@@ -49,6 +49,9 @@
                   <router-link to="/test">
                     <MenuItem name="1-2">测试</MenuItem>
                   </router-link>
+                  <router-link to="/selectShare">
+                    <MenuItem name="1-3">选股</MenuItem>
+                  </router-link>
                 </Submenu>
                 <Submenu name="2">
                   <template slot="title">
