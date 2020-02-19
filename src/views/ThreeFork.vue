@@ -33,6 +33,13 @@
           <span v-if="updateCD == 0">Update</span>
           <span v-else>{{updateCD}}s</span>
         </Button>
+        <Button
+          type="primary"
+          shape="circle"
+          style="margin-left: 20px"
+          icon="md-arrow-round-forward"
+          @click="toDongCai()"
+        >东方财富</Button>
       </FormItem>
     </Form>
 
@@ -198,6 +205,7 @@ export default {
   name: 'ThreeFork',
   data () {
     return {
+      dongCaiCode: '',
       formInline: {
         code: ''
       },
@@ -231,6 +239,19 @@ export default {
             } else {
               return !row.code.startsWith('688') && !row.code.startsWith('300')
             }
+          },
+          render: (h, params) => {
+            return h('div', [
+              h('a', {
+                on: {
+                  click: () => {
+                    var code = this.shareData[params.index].code
+                    this.query(`/api/threeFork/only/${code}`)
+                    this.drawKChart(code)
+                  }
+                }
+              }, `${this.shareData[params.index].code}`)
+            ])
           }
         },
         {
@@ -366,6 +387,23 @@ export default {
           // fixed: 'right',
           width: 140,
           render: (h, params) => {
+            var query = (url) => {
+              var vm = this
+              axios.get(url, {
+                withCredentials: true // 加了这段就可以跨域了
+              }).then(function (res) {
+                console.log(res)
+                if (res.status === 200) {
+                  vm.$Notice.success({
+                    title: '成功'
+                  })
+                } else {
+                  vm.$Notice.error({
+                    title: '失败'
+                  })
+                }
+              })
+            }
             return h('div', [
               h('Button', {
                 props: {
@@ -375,21 +413,22 @@ export default {
                 on: {
                   click: () => {
                     var code = this.shareData[params.index].code
-                    this.query(`/api/threeFork/only/${code}`)
-                    this.drawKChart(`/api/kline/${code}`)
+                    query(`/api/threeFork/buy/${code}`)
                   }
                 }
-              }, '详情'),
-              h('Icon', {
+              }, '买入'),
+              h('Button', {
                 props: {
-                  type: 'md-grid'
+                  type: 'primary',
+                  size: 'small'
                 },
                 on: {
                   click: () => {
-                    window.open(`http://data.eastmoney.com/stockdata/${this.shareData[params.index].code}.html`, '_blank')
+                    var code = this.shareData[params.index].code
+                    query(`/api/threeFork/sale/${code}`)
                   }
                 }
-              })
+              }, '卖出')
             ])
           }
         }
@@ -432,6 +471,13 @@ export default {
       }
       return ''
     },
+    toDongCai () {
+      if (this.dongCaiCode.length === 6) {
+        window.open(`http://data.eastmoney.com/stockdata/${this.dongCaiCode}.html`, '_blank')
+      } else if (this.formInline.code.length === 6) {
+        window.open(`http://data.eastmoney.com/stockdata/${this.formInline.code}.html`, '_blank')
+      }
+    },
     show (index) {
       this.$Modal.info({
         title: 'User Info',
@@ -467,11 +513,12 @@ export default {
     },
     queryCode (code) {
       this.query(`/api/threeFork/only/${code}`)
-      this.drawKChart(`/api/kline/${code}`)
+      this.drawKChart(code)
     },
     refresh () {
       this.query(`/api/threeFork/recent/all`)
       this.KLine = false
+      this.dongCaiCode = ''
     },
     update () {
       var vm = this
@@ -490,9 +537,10 @@ export default {
         }
       })
     },
-    drawKChart (url) {
+    drawKChart (code) {
       this.KLine = true
-      axios.get(url, {
+      this.dongCaiCode = code
+      axios.get(`/api/kline/${code}`, {
         withCredentials: true // 加了这段就可以跨域了
       }).then(function (res) {
         console.log(res)
