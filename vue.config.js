@@ -3,6 +3,7 @@
 module.exports = {
   // 打包路径修改
   publicPath: './',
+  assetsDir: 'static',
   // 接口代理
   devServer: {
     https: false,

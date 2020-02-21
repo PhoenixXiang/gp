@@ -142,7 +142,7 @@ export default {
       console.log(data)
       var vm = this
       vm.loading = true
-      axios.post(`/api/SelectShare`, data, {
+      axios.post(`/SelectShare`, data, {
         withCredentials: true // 加了这段就可以跨域了
       }).then(function (res) {
         console.log(res)

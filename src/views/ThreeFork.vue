@@ -34,6 +34,7 @@
           <span v-else>{{updateCD}}s</span>
         </Button>
         <Button
+          v-if="KLine"
           type="primary"
           shape="circle"
           style="margin-left: 20px"
@@ -246,7 +247,7 @@ export default {
                 on: {
                   click: () => {
                     var code = this.shareData[params.index].code
-                    this.query(`/api/threeFork/only/${code}`)
+                    this.query(`/threeFork/only/${code}`)
                     this.drawKChart(code)
                   }
                 }
@@ -387,7 +388,7 @@ export default {
           // fixed: 'right',
           width: 140,
           render: (h, params) => {
-            var query = (url) => {
+            var query = (url, title) => {
               var vm = this
               axios.get(url, {
                 withCredentials: true // 加了这段就可以跨域了
@@ -395,11 +396,11 @@ export default {
                 console.log(res)
                 if (res.status === 200) {
                   vm.$Notice.success({
-                    title: '成功'
+                    title: title + ',成功'
                   })
                 } else {
                   vm.$Notice.error({
-                    title: '失败'
+                    title: title + ',失败'
                   })
                 }
               })
@@ -413,7 +414,7 @@ export default {
                 on: {
                   click: () => {
                     var code = this.shareData[params.index].code
-                    query(`/api/threeFork/buy/${code}`)
+                    query(`/threeFork/buy/${code}`, '买入')
                   }
                 }
               }, '买入'),
@@ -425,7 +426,7 @@ export default {
                 on: {
                   click: () => {
                     var code = this.shareData[params.index].code
-                    query(`/api/threeFork/sale/${code}`)
+                    query(`/threeFork/sale/${code}`, '卖出')
                   }
                 }
               }, '卖出')
@@ -459,7 +460,7 @@ export default {
     }
   },
   mounted: function () {
-    this.query(`/api/threeFork/recent/all`)
+    this.query(`/threeFork/recent/all`)
   },
   methods: {
     rowClassName (row, index) {
@@ -512,17 +513,17 @@ export default {
       })
     },
     queryCode (code) {
-      this.query(`/api/threeFork/only/${code}`)
+      this.query(`/threeFork/only/${code}`)
       this.drawKChart(code)
     },
     refresh () {
-      this.query(`/api/threeFork/recent/all`)
+      this.query(`/threeFork/recent/all`)
       this.KLine = false
       this.dongCaiCode = ''
     },
     update () {
       var vm = this
-      axios.get(`/api/threeFork/update`, {
+      axios.get(`/threeFork/update`, {
         withCredentials: true // 加了这段就可以跨域了
       }).then(function (res) {
         console.log(res)
@@ -540,7 +541,7 @@ export default {
     drawKChart (code) {
       this.KLine = true
       this.dongCaiCode = code
-      axios.get(`/api/kline/${code}`, {
+      axios.get(`/kline/${code}`, {
         withCredentials: true // 加了这段就可以跨域了
       }).then(function (res) {
         console.log(res)
