@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>三金叉</h1>
+    <h1>三金叉之{{strategy}}</h1>
     <Form ref="formInline" :model="formInline" :rules="ruleInline" inline>
       <FormItem prop="code">
         <Input type="text" v-model="formInline.code" placeholder="Code">
@@ -204,6 +204,7 @@ function getOption (rawData) {
 
 export default {
   name: 'ThreeFork',
+  props: ['strategy'],
   data () {
     return {
       dongCaiCode: '',
@@ -247,7 +248,7 @@ export default {
                 on: {
                   click: () => {
                     var code = this.shareData[params.index].code
-                    this.query(`/threeFork/only/${code}`)
+                    this.query(`/threeFork/${this.strategy}/only/${code}`)
                     this.drawKChart(code)
                   }
                 }
@@ -451,6 +452,11 @@ export default {
           key: 'buy_price'
         },
         {
+          title: '间隔天数',
+          align: 'center',
+          key: 'inter_days'
+        },
+        {
           title: '收益率',
           align: 'center',
           key: 'earnings'
@@ -460,7 +466,7 @@ export default {
     }
   },
   mounted: function () {
-    this.query(`/threeFork/recent/all`)
+    this.query(`/threeFork/${this.strategy}/recent/all`)
   },
   methods: {
     rowClassName (row, index) {
@@ -513,11 +519,11 @@ export default {
       })
     },
     queryCode (code) {
-      this.query(`/threeFork/only/${code}`)
+      this.query(`/threeFork/${this.strategy}/only/${code}`)
       this.drawKChart(code)
     },
     refresh () {
-      this.query(`/threeFork/recent/all`)
+      this.query(`/threeFork/${this.strategy}/recent/all`)
       this.KLine = false
       this.dongCaiCode = ''
     },

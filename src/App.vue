@@ -57,16 +57,16 @@
                   <template slot="title">
                     <Icon type="ios-keypad"></Icon>策略
                   </template>
-                  <router-link to="/threeFork">
-                    <MenuItem name="2-1">三金叉</MenuItem>
+                  <router-link to="/threeFork/macd">
+                    <MenuItem name="2-1">MACD金叉</MenuItem>
                   </router-link>
-                  <router-link to="/kdj">
+                  <router-link to="/threeFork/kdj">
                     <MenuItem name="2-2">KDJ金叉</MenuItem>
                   </router-link>
-                  <router-link to="/macd">
-                    <MenuItem name="2-3">MACD金叉</MenuItem>
+                  <router-link to="kdj">
+                    <MenuItem name="2-3">5日均线金叉</MenuItem>
                   </router-link>
-                  <MenuItem name="2-4">5日均线金叉</MenuItem>
+                  <!-- <MenuItem name="2-4">5日均线金叉</MenuItem> -->
                 </Submenu>
                 <Submenu name="3">
                   <template slot="title">
@@ -78,7 +78,7 @@
               </Menu>
             </Sider>
             <Content :style="{padding: '24px', minHeight: '280px', background: '#fff'}">
-              <router-view></router-view>
+              <router-view :key="key"></router-view>
             </Content>
           </Layout>
         </Content>
@@ -114,6 +114,12 @@ export default {
   },
   mounted: function () {
     // this.drawTest()
+  },
+  computed: {
+    // key用于路由切换时触发mounted函数
+    key () {
+      return this.$route.name ? this.$route.name + +new Date() : this.$route.name + +new Date()
+    }
   },
   methods: {
     // drawTest () {

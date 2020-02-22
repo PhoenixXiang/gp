@@ -23,9 +23,10 @@ const routes = [
     name: 'selectShare',
     component: SelectShare
   }, {
-    path: '/threeFork',
+    path: '/threeFork/:strategy',
     name: 'threeFork',
-    component: ThreeFork
+    component: ThreeFork,
+    props: true
   }, {
     path: '/kdj',
     name: 'kdj',

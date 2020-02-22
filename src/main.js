@@ -8,7 +8,7 @@ import Axios from 'axios'
 
 const isPro = Object.is(process.env.NODE_ENV, 'production')
 
-Axios.defaults.baseURL = isPro ? '' : 'api/'
+Axios.defaults.baseURL = isPro ? '' : '/api'
 
 Vue.config.productionTip = false
 
